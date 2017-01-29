@@ -15,6 +15,7 @@ namespace HandMotion.Control
         private static HandDetatils handdetails = new HandDetatils();
         private static MotionDetection hddetection;
         private static MotionRecognition motionreco;
+        private static UsageFile file;
         private static Commands comannds;
         private static StopWatch stopWatch;
         private static int x;
@@ -28,6 +29,7 @@ namespace HandMotion.Control
             hddetection = MotionDetection.getinstance();
             motionreco = MotionRecognition.getinstance();
             stopWatch = StopWatch.getinstance();
+            file = UsageFile.getinstance();
         }
         public static HandDetatils getinstance()
         {
@@ -39,13 +41,13 @@ namespace HandMotion.Control
             {
                 stopWatch.StartStopWatch();
 
-                if (stopWatch.getcurentWaitingTime().Seconds == 10)
+                if (stopWatch.getcurentWaitingTime().Minutes == 5)
                 {
                     ResetStaopeWath();
                     motionreco.EmptyHand();
 
                     if (Userhand) {
-                        //write file
+                        file.WriteFile();
                         Userhand = false;
                     }
                 }
@@ -53,7 +55,6 @@ namespace HandMotion.Control
             foreach (Hand hand in frame.Hands)
             {
                 Userhand = true;
-
                 x = (int)Math.Ceiling(hand.PalmPosition.x);
                 y = (int)Math.Ceiling(hand.PalmPosition.y);
                 z = (int)Math.Ceiling(hand.PalmPosition.z);
